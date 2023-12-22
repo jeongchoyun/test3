@@ -196,10 +196,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <section id="의사결정나무의-수동구현-70점" class="level1">
 <h1>1. 의사결정나무의 수동구현 (70점)</h1>
-<div class="cell" data-execution_count="79">
+<div class="cell" data-execution_count="114">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/MP2023/master/posts/height_train.csv'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="79">
+<div class="cell-output cell-output-display" data-execution_count="114">
 <div>
 
 
@@ -287,16 +287,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><code>(1)</code> <code>df_train</code>에서 “sex”,“weight”를 설명변수로 “height”을 반응변수로 설정하라. 결측치가 있을 경우 결측값에 일괄적으로 -99로 채워넣어라.</p>
-<div class="cell" data-execution_count="80">
+<div class="cell" data-execution_count="115">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:,<span class="st">'weight'</span>:<span class="st">'sex'</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X.fillna(<span class="op">-</span><span class="dv">99</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train[<span class="st">'height'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>(2)</code> <code>height</code>열의 평균으로 <code>height</code>의 값을 추정하라. 추정값을 <code>yhat</code>에 저장하라. <code>sklearn.metrics.r2_score()</code>을 이용하여 <code>r2_score</code>를 계산하라.</p>
-<div class="cell" data-execution_count="81">
+<div class="cell" data-execution_count="116">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> np.full(<span class="bu">len</span>(y),y.mean())</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sklearn.metrics.r2_score(y,yhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="81">
+<div class="cell-output cell-output-display" data-execution_count="116">
 <pre><code>0.0</code></pre>
 </div>
 </div>
@@ -310,9 +310,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>X['weight']</code> &gt;= <code>c</code></li>
 </ul>
 <p><code>sklearn.metrics.r2_score()</code>를 이용하여 최적의 <span class="math inline">\(c\)</span>값을 구하여라.</p>
-<div class="cell" data-execution_count="82">
+<div class="cell" data-execution_count="117">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> y <span class="op">-</span> yhat<span class="op">;</span>r.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="82">
+<div class="cell-output cell-output-display" data-execution_count="117">
 <pre><code>0    6.241209
 1    7.812131
 2    7.542143
@@ -321,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Name: height, dtype: float64</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="83">
+<div class="cell" data-execution_count="118">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_predict(X,r,c):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.array(X).reshape(<span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.array(r)</span>
@@ -330,7 +330,7 @@ Name: height, dtype: float64</code></pre>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    rhat[X<span class="op">&gt;=</span> c] <span class="op">=</span> r[X <span class="op">&gt;=</span> c].mean()</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="84">
+<div class="cell" data-execution_count="119">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cuts <span class="op">=</span> np.arange(X[<span class="st">'weight'</span>].<span class="bu">min</span>()<span class="op">+</span><span class="dv">1</span>, X[<span class="st">'weight'</span>].<span class="bu">max</span>())</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> np.array([sklearn.metrics.r2_score(r,fit_predict(X[<span class="st">'weight'</span>],r,c)) <span class="cf">for</span> c <span class="kw">in</span> cuts])</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.plot(cuts,score)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -338,11 +338,11 @@ Name: height, dtype: float64</code></pre>
 <p><img src="기말레포트_빅_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="85">
+<div class="cell" data-execution_count="120">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> cuts[score.argmax()]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>rhat <span class="op">=</span> fit_predict(X[<span class="st">'weight'</span>],r,c)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>c, rhat[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="85">
+<div class="cell-output cell-output-display" data-execution_count="120">
 <pre><code>(-98.0,
  array([ 6.86933485,  6.86933485, -5.86850461,  6.86933485, -5.86850461]))</code></pre>
 </div>
@@ -352,13 +352,13 @@ Name: height, dtype: float64</code></pre>
 <p>이 분할에서 depth=2 로 나무를 성장하고자 한다. 성장이가능한가? 성장이 가능하다면 이때 나무를 성장시키기 위한 변수로 weigth와 sex중 무엇이 적절한가? 왜 그렇다고 생각하는가?</p>
 <p><code>-</code> 아래 결과 weight, sex의 r2_score가 같게 나왔다.</p>
 <p>[1] weight 분할</p>
-<div class="cell" data-execution_count="70">
+<div class="cell" data-execution_count="121">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>X1 <span class="op">=</span> X[X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c][<span class="st">'weight'</span>]</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>y1 <span class="op">=</span> y[X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>y1hat <span class="op">=</span> np.full(<span class="bu">len</span>(y1),y1.mean())</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> y1 <span class="op">-</span> y1hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="71">
+<div class="cell" data-execution_count="122">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cuts1 <span class="op">=</span> np.arange(X1.<span class="bu">min</span>()<span class="op">+</span><span class="fl">0.1</span>, X1.<span class="bu">max</span>())<span class="op">;</span>cuts1</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>score1 <span class="op">=</span> np.array([sklearn.metrics.r2_score(r1,fit_predict(X1,r1,c)) <span class="cf">for</span> c <span class="kw">in</span> cuts1])</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.plot(cuts1,score1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -366,21 +366,21 @@ Name: height, dtype: float64</code></pre>
 <p><img src="기말레포트_빅_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="86">
+<div class="cell" data-execution_count="123">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>score_weight <span class="op">=</span> score1.<span class="bu">max</span>()</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">=</span> cuts1[score1.argmax()]</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>rhat1 <span class="op">=</span> fit_predict(X1,r1,c1)</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>c1, rhat1[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="86">
+<div class="cell-output cell-output-display" data-execution_count="123">
 <pre><code>(56.38466063107373,
  array([12.99170343, 12.99170343, -4.68169493, 12.99170343, -4.68169493]))</code></pre>
 </div>
 </div>
 <p>[2] sex 분할</p>
-<div class="cell" data-execution_count="87">
+<div class="cell" data-execution_count="124">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> X[X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c][<span class="st">'sex'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="88">
+<div class="cell" data-execution_count="125">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_predict_sex(X,r):</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.array(X).reshape(<span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.array(r)</span>
@@ -389,12 +389,12 @@ Name: height, dtype: float64</code></pre>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    rhat[X <span class="op">==</span> <span class="st">'male'</span>] <span class="op">=</span> r[X <span class="op">==</span> <span class="st">'male'</span>].mean()</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="89">
+<div class="cell" data-execution_count="126">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>score_sex <span class="op">=</span> sklearn.metrics.r2_score(r1, fit_predict_sex(X2,r1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="90">
+<div class="cell" data-execution_count="127">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>score_weight, score_sex</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="90">
+<div class="cell-output cell-output-display" data-execution_count="127">
 <pre><code>(0.9522972193365125, 0.9522972193365125)</code></pre>
 </div>
 </div>
@@ -409,7 +409,7 @@ Name: height, dtype: float64</code></pre>
 <li><code>yhat2</code> <span class="math inline">\(\leftarrow\)</span> <code>yhat</code> + 학습률 <span class="math inline">\(\times\)</span> <code>rhat</code></li>
 <li><code>r2</code> <span class="math inline">\(\leftarrow\)</span> <code>r</code> - 학습률 <span class="math inline">\(\times\)</span> <code>rhat</code>, where <code>r2</code> = <code>y</code> - <code>yhat2</code></li>
 </ul>
-<div class="cell" data-execution_count="112">
+<div class="cell" data-execution_count="132">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># r[X['weight'] &lt; c]</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>r[X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c] <span class="op">=</span> r1</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> np.array(r)</span>
@@ -417,34 +417,37 @@ Name: height, dtype: float64</code></pre>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># rhat[X['weight'] &lt; c]</span></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>rhat[X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c] <span class="op">=</span> rhat1</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># yhat[X['weight'] &lt; c]</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>yhat[X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c] <span class="op">=</span> y1hat</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>yhat1 <span class="op">=</span> y[X[<span class="st">'weight'</span>] <span class="op">&lt;</span> c] <span class="co"># 몸무게가 -99인 사람들의 평균 키. 위에서 따로 구하지 않았음.</span></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>r[:<span class="dv">5</span>], rhat[:<span class="dv">5</span>], yhat[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="112">
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>yhat[X[<span class="st">'weight'</span>] <span class="op">&lt;</span> c] <span class="op">=</span> yhat1</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>yhat[X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c] <span class="op">=</span> y1hat</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>r[:<span class="dv">5</span>], rhat[:<span class="dv">5</span>], yhat[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="132">
 <pre><code>(array([ 6.24120927,  7.81213147, 13.41064801,  5.71991353, 13.38337907]),
  array([ 6.86933485,  6.86933485, 12.99170343,  6.86933485, 12.99170343]),
- array([157.98652826, 157.98652826, 152.11802365, 157.98652826,
+ array([164.22773753, 165.79865973, 152.11802365, 163.7064418 ,
         152.11802365]))</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="96">
+<div class="cell" data-execution_count="137">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>yhat2 <span class="op">=</span> yhat <span class="op">+</span> <span class="fl">0.1</span><span class="op">*</span>rhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="97">
+<div class="cell" data-execution_count="138">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>sklearn.metrics.r2_score(y,yhat2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="97">
-<pre><code>0.381893964742826</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="138">
+<pre><code>0.6247857411378884</code></pre>
 </div>
 </div>
 <p><code>(7)</code> <code>(6)</code>에서 학습률이 0.5일 경우 <code>y</code>와 <code>yhat2</code>의 <code>r2_score</code>를 계산하라.</p>
-<div class="cell" data-execution_count="98">
+<div class="cell" data-execution_count="139">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>yhat3 <span class="op">=</span> yhat <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span>rhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="99">
+<div class="cell" data-execution_count="140">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sklearn.metrics.r2_score(y,yhat3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="99">
-<pre><code>0.78500496939158</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="140">
+<pre><code>0.7983541219186371</code></pre>
 </div>
 </div>
 </section>
